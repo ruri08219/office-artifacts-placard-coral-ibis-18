@@ -9,6 +9,7 @@ by Accounting, who knew better). 161 characters, inside the 1-180 gate.
 """
 
 import os
+from pathlib import Path
 
 ENTRY = (
     "Stapler, c. 1998. Forged steel. Ritual binding device; the tribe "
@@ -21,10 +22,10 @@ def main():
     assert 1 <= len(ENTRY) <= 180, len(ENTRY)
     assert ENTRY.strip(), "entry must not be only whitespace"
     assert "\n" not in ENTRY, "entry must be a single line"
-    out_dir = os.environ.get("OUTPUT_DIR", "/output")
-    os.makedirs(out_dir, exist_ok=True)
-    with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8") as f:
-        f.write(ENTRY)
+    ENTRY.encode("ascii")  # placard is plain ASCII; reject any non-ASCII drift
+    out_dir = Path(os.environ.get("OUTPUT_DIR", "/output"))
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "entry.txt").write_text(ENTRY, encoding="utf-8")
 
 
 if __name__ == "__main__":
